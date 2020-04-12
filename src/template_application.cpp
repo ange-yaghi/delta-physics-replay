@@ -6,7 +6,9 @@
 #include <string>
 
 TemplateApplication::TemplateApplication() {
-    m_demoTexture = nullptr;
+    m_frame = 0;
+    m_cameraPosition = ysMath::LoadVector(0.0f, 0.0f, 10.0f);
+    m_replayFile = nullptr;
 }
 
 TemplateApplication::~TemplateApplication() {
@@ -33,17 +35,21 @@ void TemplateApplication::Initialize(void *instance, ysContextObject::DEVICE_API
     m_engine.GetConsole()->SetDefaultFontDirectory(enginePath + "/fonts/");
 
     m_engine.CreateGameWindow(
-        "Delta Template Application",
+        "Delta Physics Replay",
         instance,
         api,
         (enginePath + "/shaders/").c_str());
 
-    m_engine.SetClearColor(0x34, 0x98, 0xdb);
+    m_engine.SetClearColor(0x0, 0x0, 0x0);
 
     m_assetManager.SetEngine(&m_engine);
-    m_engine.LoadTexture(&m_demoTexture, (assetPath + "/chicken.png").c_str());
 
-    m_replayFile = new ReplayFile("E:\\Software\\ant-world\\dependencies\\submodules\\delta-studios\\project\\Debug\\VelocityResolutionCheck_replay.txt");
+    m_assetManager.CompileInterchangeFile((assetPath + "/circle").c_str(), 1.0f, true);
+    m_assetManager.LoadSceneFile((assetPath + "/circle").c_str());
+
+    CircleBounds::m_circleGeometry = m_assetManager.GetModelAsset("Circle");
+
+    m_replayFile = new ReplayFile("D:\\Projects\\Software\\ant-world\\dependencies\\submodules\\delta-studios\\project\\x64\\Debug\\SystemTest_replay.txt");
     m_cameraPosition = ysMath::LoadVector(0.0f, 0.0f, 10.0f);
 }
 

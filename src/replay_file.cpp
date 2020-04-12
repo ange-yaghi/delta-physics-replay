@@ -20,12 +20,20 @@ void RigidBodyProxy::render(dbasic::DeltaEngine *engine, int frame) {
     ysTransform &transform = m_transforms[frame];
 
     for (Bounds *bounds : m_bounds) {
-        bounds->render(engine, transform);
+        bounds->render(engine, transform, m_color);
     }
 }
 
 ReplayFile::ReplayFile(const std::string &fname) {
     m_frameCount = 0;
+
+    m_colors = new ysVector4[5];
+    m_colors[0] = ysVector4(254 / 255.0f, 0.0f, 0.0f, 1.0f);
+    m_colors[1] = ysVector4(253 / 255.0f, 254 / 255.0f, 2 / 255.0f, 1.0f);
+    m_colors[2] = ysVector4(11 / 255.0f, 255 / 255.0f, 1 / 255.0f, 1.0f);
+    m_colors[3] = ysVector4(1 / 255.0f, 30 / 255.0f, 254 / 255.0f, 1.0f);
+    m_colors[4] = ysVector4(254 / 255.0f, 0 / 255.0f, 246 / 255.0f, 1.0f);
+
     readFile(fname);
 }
 
@@ -46,12 +54,16 @@ void ReplayFile::readFile(const std::string &fname) {
     std::string buffer;
     f >> buffer; // <Objects>
 
+    int rigidBodyCount = 0;
+
     while (true) {
         f >> buffer;
         if (buffer == "</Objects>") break;
 
         RigidBodyProxy *newRigidBody = new RigidBodyProxy;
+        newRigidBody->m_color = m_colors[rigidBodyCount % 5];
         m_bodies.push_back(newRigidBody);
+        ++rigidBodyCount;
         
         while (true) {
             f >> buffer;
@@ -167,12 +179,14 @@ BoxBounds::~BoxBounds() {
     /* void */
 }
 
-void BoxBounds::render(dbasic::DeltaEngine *engine, ysTransform &space) {
-    int color[] = { 255, 0, 0 };
+void BoxBounds::render(dbasic::DeltaEngine *engine, ysTransform &space, const ysVector4 &color) {
+    int rgb[] = { color.x * 255, color.y * 255, color.z * 255 };
 
     engine->SetObjectTransform(space.GetWorldTransform());
-    engine->DrawBox(color, m_halfWidth * 2, m_halfHeight * 2, 0);
+    engine->DrawBox(rgb, m_halfWidth * 2, m_halfHeight * 2, 0);
 }
+
+dbasic::ModelAsset *CircleBounds::m_circleGeometry = nullptr;
 
 CircleBounds::CircleBounds() {
     m_radius = 0.0f;
@@ -183,9 +197,7 @@ CircleBounds::~CircleBounds() {
     /* void */
 }
 
-void CircleBounds::render(dbasic::DeltaEngine *engine, ysTransform &space) {
-    int color[] = { 0, 255, 0 };
-
-    engine->SetObjectTransform(space.GetWorldTransform());
-    engine->DrawBox(color, m_radius * 2, m_radius * 2, 0);
+void CircleBounds::render(dbasic::DeltaEngine *engine, ysTransform &space, const ysVector4 &color) {
+    engine->SetMultiplyColor(color);
+    engine->DrawModel(m_circleGeometry, space.GetWorldTransform(), m_radius, nullptr);
 }

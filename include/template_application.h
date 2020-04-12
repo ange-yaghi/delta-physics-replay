@@ -22,7 +22,6 @@ protected:
     dbasic::DeltaEngine m_engine;
     dbasic::AssetManager m_assetManager;
 
-    ysTexture *m_demoTexture;
     ReplayFile *m_replayFile;
 
     ysVector m_cameraPosition;
