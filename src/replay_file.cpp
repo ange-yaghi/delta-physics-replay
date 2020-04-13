@@ -198,6 +198,17 @@ CircleBounds::~CircleBounds() {
 }
 
 void CircleBounds::render(dbasic::DeltaEngine *engine, ysTransform &space, const ysVector4 &color) {
+    constexpr int line[] = { 255, 255, 255 };
+
+    engine->DrawAxis(line, 
+        space.LocalToWorldSpace(ysMath::LoadVector(0.0f, -m_radius, 0.0f)), 
+        space.LocalToWorldDirection(ysMath::Constants::YAxis), 
+        0.01f, m_radius * 2.0f, 1);
+    engine->DrawAxis(line, 
+        space.LocalToWorldSpace(ysMath::LoadVector(-m_radius, 0.0f, 0.0f)),
+        space.LocalToWorldDirection(ysMath::Constants::XAxis), 
+        0.01f, m_radius * 2.0f, 1);
+
     engine->SetMultiplyColor(color);
     engine->DrawModel(m_circleGeometry, space.GetWorldTransform(), m_radius, nullptr);
 }

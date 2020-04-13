@@ -49,8 +49,9 @@ void TemplateApplication::Initialize(void *instance, ysContextObject::DEVICE_API
 
     CircleBounds::m_circleGeometry = m_assetManager.GetModelAsset("Circle");
 
-    // Laptop: D:\\Projects\\Software\\ant-world\\dependencies\\submodules\\delta-studios\\project\\x64\\Debug\\SystemTest_replay.txt
-    m_replayFile = new ReplayFile("E:\\Software\\ant-world\\dependencies\\submodules\\delta-studios\\project\\Debug\\SystemTest_replay.txt");
+    //m_replayFile = new ReplayFile("E:\\Software\\ant-world\\dependencies\\submodules\\delta-studios\\project\\Debug\\SystemTest_replay.txt");
+    m_replayFile = new ReplayFile("D:\\Projects\\Software\\ant-world\\dependencies\\submodules\\delta-studios\\project\\x64\\Debug\\SystemTest_replay.txt");
+
     m_cameraPosition = ysMath::LoadVector(0.0f, 0.0f, 10.0f);
 }
 
